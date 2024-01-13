@@ -49,8 +49,6 @@ function guardarCliente() {
 
     // Mostrar las secciones
     mostrarSecciones();
-
-    console.log( cliente )
 }
 
 function mostrarSecciones() {
@@ -126,14 +124,13 @@ function agregarPlatillo( producto ) {
                     articulo.cantidad = producto.cantidad;
                 }
                 return articulo;
-            } )
+            } );
             // Se asigna el nuevo arreglo a cliente.pedido
             cliente.pedido = [ ...pedidoActualizado ];
         } else {
             // Si el articulo no existe, lo agregamos al arreglo de pedido
             cliente.pedido = [ ...pedido, producto ];
         }
-
     } else {
         // Eliminar elementos cuando la cantidad es 0
         const resultado = pedido.filter( articulo => articulo.id != producto.id );
@@ -191,10 +188,12 @@ function actualizaResumen() {
         const lista = document.createElement( 'LI' );
         lista.classList.add( 'list-group-item' );
 
+        // Nombre del artículo
         const nombreEl = document.createElement( 'H4' );
         nombreEl.classList.add( 'my-4' );
         nombreEl.textContent = nombre;
 
+        //  precio del artículo
         const precioEl = document.createElement( 'P' );
         precioEl.classList.add( 'fw-bold' );
         precioEl.textContent = `Precio : `;
@@ -203,6 +202,16 @@ function actualizaResumen() {
         precioValor.classList.add( 'fw-normal' );
         precioValor.textContent = `$ ${precio}`;
 
+        //  Subtotal del artículo
+        const subtotalEl = document.createElement( 'P' );
+        subtotalEl.classList.add( 'fw-bold' );
+        subtotalEl.textContent = `Subtotal : `;
+
+        const subtotalValor = document.createElement( 'SPAN' );
+        subtotalValor.classList.add( 'fw-normal' );
+        subtotalValor.textContent = calcularSubtotal( precio, cantidad );
+
+        // Cantidad de artículos
         const cantidadEl = document.createElement( 'P' );
         cantidadEl.classList.add( 'fw-bold' );
         cantidadEl.textContent = `Cantidad : `;
@@ -214,11 +223,13 @@ function actualizaResumen() {
         // Agregar valores a sus contenedores
         cantidadEl.appendChild( cantidadValor );
         precioEl.appendChild( precioValor );
+        subtotalEl.appendChild( subtotalValor );
 
         // Agregar elementos al LI
         lista.appendChild( nombreEl );
         lista.appendChild( cantidadEl );
         lista.appendChild( precioEl );
+        lista.appendChild( subtotalEl );
 
         // Agregar lista al grupo principal
         grupo.appendChild( lista );
@@ -240,6 +251,10 @@ function limpiarHTML() {
     while ( contenido.firstChild ) {
         contenido.removeChild( contenido.firstChild );
     }
+}
+
+function calcularSubtotal( precio, cantidad ) {
+    return `$ ${precio * cantidad}`;
 }
 
 
