@@ -140,15 +140,20 @@ function agregarPlatillo( producto ) {
     // Limpiar el código HTML previo
     limpiarHTML();
 
-    // Mostrar el resumen
-    actualizaResumen();
+    // Verifica condicionalmente si el pedido está vación o no para agregar el párrafo de resumen vacio
+    if ( cliente.pedido.length ) {
+        // Mostrar el resumen
+        actualizaResumen();
+    } else {
+        mensajePedidoVacio();
+    }
 }
 
 function actualizaResumen() {
     const contenido = document.querySelector( '#resumen .contenido' );
 
     const resumen = document.createElement( 'DIV' );
-    resumen.classList.add( 'col-md-6', 'card', 'py-5', 'px-3', 'shadow' );
+    resumen.classList.add( 'col-md-6', 'card', 'py-2', 'px-3', 'shadow' );
 
     // Información de la mesa
     const mesa = document.createElement( 'P' );
@@ -230,7 +235,6 @@ function actualizaResumen() {
             eliminarProducto( id );
         }
 
-
         // Agregar valores a sus contenedores
         cantidadEl.appendChild( cantidadValor );
         precioEl.appendChild( precioValor );
@@ -248,13 +252,16 @@ function actualizaResumen() {
     } );
 
     // Agregar al contenido
+    resumen.appendChild( heading );
     resumen.appendChild( mesa );
     resumen.appendChild( hora );
-    resumen.appendChild( heading );
     resumen.appendChild( grupo );
 
     // Mostrar el resumen en pantalla
     contenido.appendChild( resumen );
+
+    // Mostrar el formulario de propinas
+    formularioPropinas();
 }
 
 function limpiarHTML() {
@@ -277,9 +284,46 @@ function eliminarProducto( id ) {
     // Limpiar el código HTML previo
     limpiarHTML();
 
-    // Mostrar el resumen
-    actualizaResumen();
+    // Verifica condicionalmente si el pedido está vación o no para agregar el párrafo de resumen vacio
+    if ( cliente.pedido.length ) {
+        // Mostrar el resumen
+        actualizaResumen();
+    } else {
+        mensajePedidoVacio();
+    }
+
+    // El producto se eliminó, por lo que la cantidad en el formulario debe regresar a 0
+    const productoEliminado = `#producto-${id}`;
+    const inputEliminado = document.querySelector( productoEliminado );
+    inputEliminado.value = 0;
 }
 
+function mensajePedidoVacio() {
+    const contenido = document.querySelector( '#resumen .contenido' );
+
+    const texto = document.createElement( 'P' );
+    texto.classList.add( 'text-center' );
+    texto.textContent = 'Añade los elementos del Pedido';
+
+    contenido.appendChild( texto );
+}
+
+function formularioPropinas() {
+    const contenido = document.querySelector( '#resumen .contenido' );
+
+    const formulario = document.createElement( 'DIV' );
+    formulario.classList.add( 'col-md-6', 'formulario' );
+
+    const divFormulario = document.createElement( 'DIV' );
+    divFormulario.classList.add( 'card', 'py-2', 'px-3', 'shadow' );
+
+    const heading = document.createElement( 'H3' );
+    heading.classList.add( 'my-4', 'text-center' );
+    heading.textContent = 'Propina';
 
 
+    formulario.appendChild( divFormulario );
+    divFormulario.appendChild( heading );
+
+    contenido.appendChild( formulario );
+}
