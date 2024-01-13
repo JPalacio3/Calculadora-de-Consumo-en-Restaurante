@@ -427,6 +427,7 @@ function calcularPropina() {
     // Calcular el total a pagar
     const total = subtotal + propina;
 
+    // Mostrar en pantalla los valores del resumen calculado
     mostrarTotalHTML( subtotal, total, propina );
 }
 
