@@ -53,7 +53,6 @@ function guardarCliente() {
     console.log( cliente )
 }
 
-
 function mostrarSecciones() {
     const seccionesOcultas = document.querySelectorAll( '.d-none' );
     seccionesOcultas.forEach( seccion => seccion.classList.remove( 'd-none' ) );
@@ -94,17 +93,51 @@ function mostrarPlatillos( platillos ) {
         inputCantidad.id = `producto-${platillo.id}`;
         inputCantidad.classList.add( 'form-control' );
 
+        // Función que detecta la cantidad y el platillo que se está agregando
+        inputCantidad.onchange = function () {
+            const cantidad = parseInt( inputCantidad.value );
+            agregarPlatillo( { ...platillo, cantidad } );
+        }
+
         const agregar = document.createElement( 'DIV' );
         agregar.classList.add( 'col-md-2' );
         agregar.appendChild( inputCantidad );
-
 
         row.appendChild( nombre );
         row.appendChild( precio );
         row.appendChild( categoria );
         row.appendChild( agregar );
         contenido.appendChild( row );
-
-
     } );
+}
+
+function agregarPlatillo( producto ) {
+    // Extraer el pedido actual
+    let { pedido } = cliente;
+
+    // Revisar que la cantidad sea mayor a 0
+    if ( producto.cantidad > 0 ) {
+
+        // Comprueba si un artículo ya existe dentro del arreglo
+        if ( pedido.some( articulo => articulo.id === producto.id ) ) {
+            // El articulo ya existe, hay que actualizar la cantidad
+            const pedidoActualizado = pedido.map( articulo => {
+                if ( articulo.id === producto.id ) {
+                    articulo.cantidad = producto.cantidad;
+                }
+                return articulo;
+            } )
+            // Se asigna el nuevo arreglo a cliente.pedido
+            cliente.pedido = [ ...pedidoActualizado ];
+        } else {
+            // Si el articulo no existe, lo agregamos al arreglo de pedido
+            cliente.pedido = [ ...pedido, producto ];
+        }
+
+    } else {
+        // Eliminar elementos cuando la cantidad es 0
+        const resultado = pedido.filter( articulo => articulo.id != producto.id );
+        cliente.pedido = [ ...resultado ]
+    }
+    console.log( cliente.pedido )
 }
