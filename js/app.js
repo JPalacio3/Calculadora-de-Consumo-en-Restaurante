@@ -202,6 +202,15 @@ function actualizaResumen() {
         precioValor.classList.add( 'fw-normal' );
         precioValor.textContent = `$ ${precio}`;
 
+        // Cantidad de artículos
+        const cantidadEl = document.createElement( 'P' );
+        cantidadEl.classList.add( 'fw-bold' );
+        cantidadEl.textContent = `Cantidad : `;
+
+        const cantidadValor = document.createElement( 'SPAN' );
+        cantidadValor.classList.add( 'fw-normal' );
+        cantidadValor.textContent = cantidad;
+
         //  Subtotal del artículo
         const subtotalEl = document.createElement( 'P' );
         subtotalEl.classList.add( 'fw-bold' );
@@ -211,14 +220,16 @@ function actualizaResumen() {
         subtotalValor.classList.add( 'fw-normal' );
         subtotalValor.textContent = calcularSubtotal( precio, cantidad );
 
-        // Cantidad de artículos
-        const cantidadEl = document.createElement( 'P' );
-        cantidadEl.classList.add( 'fw-bold' );
-        cantidadEl.textContent = `Cantidad : `;
+        // Botón para eliminar artículos desde el subtotal
+        const btnEliminar = document.createElement( 'BUTTON' );
+        btnEliminar.classList.add( 'btn', 'btn-danger' );
+        btnEliminar.textContent = 'Eliminar artículo'
 
-        const cantidadValor = document.createElement( 'SPAN' );
-        cantidadValor.classList.add( 'fw-normal' );
-        cantidadValor.textContent = cantidad;
+        // Función para eliminar el pedido
+        btnEliminar.onclick = function () {
+            eliminarProducto( id );
+        }
+
 
         // Agregar valores a sus contenedores
         cantidadEl.appendChild( cantidadValor );
@@ -230,6 +241,7 @@ function actualizaResumen() {
         lista.appendChild( cantidadEl );
         lista.appendChild( precioEl );
         lista.appendChild( subtotalEl );
+        lista.appendChild( btnEliminar );
 
         // Agregar lista al grupo principal
         grupo.appendChild( lista );
@@ -255,6 +267,18 @@ function limpiarHTML() {
 
 function calcularSubtotal( precio, cantidad ) {
     return `$ ${precio * cantidad}`;
+}
+
+function eliminarProducto( id ) {
+    const { pedido } = cliente;
+    const resultado = pedido.filter( articulo => articulo.id !== id );
+    cliente.pedido = [ ...resultado ];
+
+    // Limpiar el código HTML previo
+    limpiarHTML();
+
+    // Mostrar el resumen
+    actualizaResumen();
 }
 
 
